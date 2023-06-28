@@ -5,3 +5,14 @@ plugins {
     id("com.android.library") version "8.0.2" apply false
     id("maven-publish")
 }
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "com.github.JGomez-Dev"
+            artifactId = "drag-and-drop-compose-library"
+            version = "1.0.1"
+
+        }
+    }
+}
