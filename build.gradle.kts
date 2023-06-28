@@ -11,8 +11,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.JGomez-Dev"
             artifactId = "drag-and-drop-compose-library"
-            version = "1.0.1"
-
+            version = "1.0.3"
         }
     }
 }
