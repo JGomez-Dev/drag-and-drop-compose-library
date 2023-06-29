@@ -3,15 +3,4 @@ plugins {
     id("com.android.application") version "8.0.2" apply false
     id("org.jetbrains.kotlin.android") version "1.7.20" apply false
     id("com.android.library") version "8.0.2" apply false
-    id("maven-publish")
-}
-
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = "com.github.JGomez-Dev"
-            artifactId = "drag-and-drop-compose-library"
-            version = "1.0.3"
-        }
-    }
 }

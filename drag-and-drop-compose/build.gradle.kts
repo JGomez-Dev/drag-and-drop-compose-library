@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("maven-publish")
 }
 
 android {
@@ -30,6 +31,13 @@ android {
     buildFeatures {
         compose = true
     }
+
+    publishing{
+        singleVariant("release"){
+            withJavadocJar()
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
@@ -48,4 +56,19 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+}
+
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "com.github.JGomez-Dev"
+            artifactId = "drag-and-drop-compose-library"
+            version = System.getenv("GITHUB_TAG")
+
+            afterEvaluate{
+                from(components["release"])
+            }
+        }
+    }
 }
