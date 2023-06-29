@@ -68,6 +68,16 @@ fun App() {
 @ExperimentalAnimationApi
 @Composable
 fun HomeExample() {
+     val slideStates = remember {
+        mutableStateMapOf<People, SlideState>()
+            .apply {
+                peopleList.map { example ->
+                    example to SlideState.NONE
+                }.toMap().also {
+                    putAll(it)
+                }
+            }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -100,8 +110,115 @@ fun ExampleList(
     updateSlideState: (people: People, slideState: SlideState) -> Unit,
     updateItemPosition: (currentIndex: Int, destinationIndex: Int) -> Unit
 ) {
-    // ...
+    val lazyListState = rememberLazyListState()
+    LazyColumn(
+        state = lazyListState,
+        modifier = modifier.padding(top = dimensionResource(id = R.dimen.list_top_padding))
+    ) {
+        items(peopleList.size) { index ->
+            val example = peopleList.getOrNull(index)
+            if (example != null) {
+                key(example) {
+                    val slideState = slideStates[example] ?: SlideState.NONE
+                    BasicExample(
+                        peoble = example,
+                        peopleList = peopleList,
+                        slideState = slideState,
+                        updateSlideState = updateSlideState,
+                        updateItemPosition = updateItemPosition
+                    )
+                }
+            }
+        }
+    }
 }
+
+@Composable
+fun BasicExample(
+    peoble: People,
+    peopleList: MutableList<People>,
+    slideState: SlideState,
+    updateSlideState: (shoesArticle: People, slideState: SlideState) -> Unit,
+    updateItemPosition: (currentIndex: Int, destinationIndex: Int) -> Unit
+) {
+    val itemHeightDp = dimensionResource(id = R.dimen.image_size)
+
+    val verticalTranslation by animateIntAsState(
+        targetValue = when (slideState) {
+            SlideState.UP -> -itemHeight
+            SlideState.DOWN -> itemHeight
+            else -> 0
+        },
+        label = "",
+    )
+    val isDragged = remember { mutableStateOf(false) }
+    val zIndex = if (isDragged.value) 1.0f else 0.0f
+    val rotation = if (isDragged.value) -5.0f else 0.0f
+    val elevation = if (isDragged.value) 8.dp else 0.dp
+
+    val currentIndex = remember { mutableStateOf(0) }
+    val destinationIndex = remember { mutableStateOf(0) }
+    val isPlaced = remember { mutableStateOf(false) }
+
+    with(LocalDensity.current) {
+        itemHeight = itemHeightDp.toPx().toInt()
+    }
+
+    LaunchedEffect(isPlaced.value) {
+        if (isPlaced.value) {
+            launch {
+                if (currentIndex.value != destinationIndex.value) {
+                    updateItemPosition(currentIndex.value, destinationIndex.value)
+                }
+                isPlaced.value = false
+            }
+        }
+    }
+    Column {
+        Box(
+            Modifier
+                .dragAndDrop(
+                    peoble,
+                    peopleList,
+                    itemHeight,
+                    updateSlideState,
+                    isDraggedAfterLongPress = false,
+                    { isDragged.value = true },
+                    { cIndex, dIndex ->
+                        isDragged.value = false
+                        isPlaced.value = true
+                        currentIndex.value = cIndex
+                        destinationIndex.value = dIndex
+                    }
+                )
+                .padding(horizontal = 16.dp)
+                .offset { IntOffset(0, verticalTranslation) }
+                .zIndex(zIndex)
+                .rotate(rotation)
+
+        ) {
+            Column(
+                modifier = Modifier
+                    .shadow(elevation, RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(8.dp))
+                    .align(Alignment.CenterStart)
+                    .fillMaxWidth()
+
+            ) {
+                Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = peoble.name)
+                    Image(
+                        modifier = Modifier
+                            .size(itemHeightDp),
+                        painter = painterResource(id = R.mipmap.ic_climbig_blue),
+                        contentDescription = ""
+                    )
+                }
+            }
+        }
+    }
+}
+
 ```
 ## 🙌 Contributing
 Contributions are welcome! If you find any issues or have suggestions for improvements, please create a pull request or open an issue in this repository.
