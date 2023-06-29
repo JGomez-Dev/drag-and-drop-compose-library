@@ -64,7 +64,8 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.JGomez-Dev"
             artifactId = "drag-and-drop-compose-library"
-            version = System.getenv("GITHUB_TAG")
+            version = "1.0.5"
+                //System.getenv("GITHUB_TAG")
 
             afterEvaluate{
                 from(components["release"])
