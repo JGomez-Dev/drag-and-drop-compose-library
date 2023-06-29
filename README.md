@@ -2,7 +2,7 @@
 
 [![](https://jitpack.io/v/JGomez-Dev/drag-and-drop-compose-library.svg)](https://jitpack.io/#JGomez-Dev/drag-and-drop-compose-library)
 
-![2023-06-27-01-52-45](https://github.com/JavierGF1991/drag-and-drop-jetpack-compose/assets/49919880/82468d2c-a778-4f21-99b9-234974e1d5da)
+![ezgif com-video-to-gif (1)](https://github.com/JGomez-Dev/drag-and-drop-compose-library/assets/49919880/9c19eb25-ff6c-4a73-95c1-3e2a6ff6dbc9)
 
 This project is a library that provides an extension of the Modifier class in Jetpack Compose, allowing you to easily add drag and drop behavior to list items in your applications. With this library, you can enhance the user experience by enabling users to drag items from a list and place them in a new position.
 
